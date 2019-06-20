@@ -50,7 +50,7 @@ var player1 = new Player("X");
 var player2 = new Computer("O");
 var turn = player1;
 var notTurn = player2;
-var spotsNext = [ [[5,7], 3] , [[1,2],3], [[4,5],6], [[7,8],9], [[3,6],9], [[1,4],7], [[2,5],8], [[3, 5], 7], [[2,3],1],[[5,6],4],[[8,9],7],[[6,9],3],[[4,7],1],[[5,8],2],[[1,7],4],[[1,3],2],[[1,9],5],[[3,9],6],[[3,7],5],[[4,6],5],[[7,9],8],[[2,8],5]];
+var spotsNext = [ [[5,7], 3] , [[1,2],3], [[4,5],6], [[7,8],9], [[3,6],9], [[1,4],7], [[2,5],8], [[3, 5], 7], [[2,3],1],[[5,6],4],[[8,9],7],[[6,9],3],[[4,7],1],[[5,8],2],[[1,7],4],[[1,3],2],[[1,9],5],[[3,9],6],[[3,7],5],[[4,6],5],[[7,9],8],[[2,8],5], [[1,5],9]];
 var nonCorners = [2,4,6,8];
 
 function switchTurn(){
@@ -93,6 +93,7 @@ function checkSpot(id){
       found = true
     }
   })
+
   return found;
 }
 
@@ -112,7 +113,7 @@ function autoFill(){
     if(!squareChoice){
       var count = 0
       do{
-
+        console.log("1");
         squareChoice = (Math.floor(Math.random() * Math.floor(9)))+1
       } while(checkSpot(squareChoice));
     }
@@ -129,21 +130,23 @@ function check(){
   if(player1.spotsFilled.length === 5 || player2.spotsFilled.length === 5){
     $("#winDisplay").show()
     $("#winPlayer").text("Nobody has ")
+
     return true
   }
-  switchTurn();
-  console.log("here");
+    console.log("here");
+    switchTurn();
   return false
 
 }
 
 $(document).ready(function(){
   printBoard();
+  var gameOver = false
 
   $(".grid-item").click(function(){
     var clickedSquare = parseInt($(this)[0].id);
     if(!checkSpot(clickedSquare)){
-      turn.fillSpot(clickedSquare)
+      player1.fillSpot(clickedSquare)
       printBoard();
       if(check()) return
 
@@ -154,7 +157,7 @@ $(document).ready(function(){
       } else {
         squareChoice = autoFill();
       }
-      turn.fillSpot(squareChoice);
+      player2.fillSpot(squareChoice);
       printBoard();
 
       if(check()) return
@@ -165,6 +168,7 @@ $(document).ready(function(){
     $("#winDisplay").hide();
     player1.spotsFilled = [];
     player2.spotsFilled = [];
+    switchTurn()
     emptyBoard();
   })
 })
