@@ -6,7 +6,13 @@ function Player(symbol){
 }
 
 Player.prototype.fillSpot = function(squareId){
-  this.spotsFilled.push(parseInt(squareId))
+  this.spotsFilled.push(squareId)
+}
+
+function emptyBoard(){
+  for(let i = 1; i <= 9; ++i){
+    $("#g-" + i).text("")
+  }
 }
 
 function printBoard(){
@@ -30,8 +36,6 @@ function switchTurn(){
   notTurn = temp;
 }
 function checkWin(player){
-  console.log("here");
-  console.log(player.spotsFilled);
   if(player.spotsFilled.includes(1) && player.spotsFilled.includes(2) && player.spotsFilled.includes(3)){
     return true
   } else if (player.spotsFilled.includes(1) && player.spotsFilled.includes(4) && player.spotsFilled.includes(7)) {
@@ -52,33 +56,57 @@ function checkWin(player){
     return false
   }
 }
+
 function checkSpot(arr1, arr2, id){
+  var found = false;
   arr1.forEach(function(spot){
-    if(spot === id) return false
+    console.log(spot);
+    console.log(id);
+    if(spot === id) {
+      console.log("equal");
+      found = true
+    }
   })
   arr2.forEach(function(spot2){
-    if(spot2 === id) return false
+    if(spot2 === id) {
+      found = true
+    }
   })
-  return true;
+  return found;
 }
+
 $(document).ready(function(){
   printBoard();
 
   $(".grid-item").click(function(){
 
-    var clickedSquare = $(this)[0].id;
-    if(checkSpot(player1.spotsFilled, player2.spotsFilled, clickedSquare)){
+    var clickedSquare = parseInt($(this)[0].id);
+    if(!checkSpot(player1.spotsFilled, player2.spotsFilled, clickedSquare)){
+      console.log("here");
       turn.fillSpot(clickedSquare)
       printBoard();
       if(checkWin(turn)){
         $("#winDisplay").show()
-        $("#winPlayer").text(turn.symbol)
+        $("#winPlayer").text(turn.symbol+"'s have ")
+        return
+      }
+      if(player1.spotsFilled.length === 5 || player2.spotsFilled.length === 5){
+        $("#winDisplay").show()
+        $("#winPlayer").text("Nobody has ")
         return
       }
       switchTurn();
     } else {
       console.log("spot filled");
     }
+
+    $(".refresh").click(function(event) {
+      $("#winDisplay").hide();
+      player1.spotsFilled = [];
+      console.log(player1.spotsFilled);
+      player2.spotsFilled = [];
+      emptyBoard();
+    })
 
   })
 })
