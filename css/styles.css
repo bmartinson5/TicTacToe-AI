@@ -2,10 +2,12 @@
   text-align: center;
   background-color: #CE6625;
   color: white;
+  border-radius: 20px;
 }
 h1 {
-  font-size: 150px;
+  font-size: 130px;
   font-family: 'Bungee Shade', cursive;
+  padding: 20px;
 }
 body {
   background-image: url(http://www.liberaldictionary.com/wp-content/uploads/2018/12/patterns.jpg);
@@ -18,6 +20,7 @@ body {
   margin-left: 50%;
   transform: translate(-50%, 0%);
   background-color: white;
+  border-radius: 20px;
 }
 .grid-item {
   border: 1px solid black;
@@ -30,6 +33,7 @@ body {
   display: flex;
   align-items: center;
   align-content: center;
+  border-radius: 20px;
 }
 
 #g-0 {
@@ -50,7 +54,37 @@ p {
 }
 #winPlayerPar {
   background-color: #40A1CE;
+  border-radius: 20px;
+  font-size: 30px;
+  font-family: 'Bungee Shade', cursive;
+  color: white;
+  letter-spacing: 2px;
+  padding: 10px;
 }
 .win {
   width: 300px;
+}
+.refresh {
+  border-radius: 20px;
+  background-color: #40A1CE;
+  font-size: 25px;
+  font-family: 'Bungee Shade', cursive;
+  color: white;
+  letter-spacing: 2px;
+}
+.refresh:hover {
+  background-color: #CE6625;
+}
+.blinking{
+	animation:blinkingText 1.0s infinite;
+}
+@keyframes blinkingText{
+	0%{		color: #EEE;	}
+	49%{	color: transparent;	}
+	50%{	color: transparent;	}
+	99%{	color:transparent;	}
+	100%{	color: #EEE;	}
+}
+.grid-item:hover {
+  background-color: #40A1CE;
 }
