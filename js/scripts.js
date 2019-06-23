@@ -9,6 +9,8 @@ var spotsNext = [ [[5,7], 3] , [[1,2],3], [[4,5],6], [[7,8],9], [[3,6],9], [[1,4
 var nonCorners = [2,4,6,8];
 var cornerSpots = [1,3,7,9];
 var oppositeCorner = [9,7,3,1];
+var edgeSpots = [2,4,6,8];
+var oppositeEdges = [8,6,4,2];
 var possibleWins = [[1,2,3],[1,4,7],[1,5,9],[2,5,8],[3,6,9],[3,5,7],[4,5,6],[7,8,9]]
 
 
@@ -77,6 +79,22 @@ Computer.prototype.oppositeCorner = function(){
   return result
 }
 
+Computer.prototype.blockFork = function(){
+  result = 0;
+  //if second move, must react accordingly
+  if(player1.spotsFilled.length === 2) {
+    //if first user move was a corner, second computer move must be edge with empty oppositeEdge
+    if(cornerSpots.includes(player1.spotsFilled[0])){
+      edgeSpots.forEach(function(edge, idx){
+        if(!player1.spotsFilled.includes(oppositeEdges[idx]))
+          result = edge;
+      })
+    }
+  }
+  return result;
+
+}
+
 
 function emptyBoard(){
   for(let i = 1; i <= 9; ++i){
@@ -133,7 +151,7 @@ function autoFill(){
   var arr1 = player1.spotsFilled
   var arr2 = player2.spotsFilled
 
-  return player2.checkForOpponentWin(arr2, arr1) || player2.checkForOpponentWin(arr1, arr2) ||
+  return player2.checkForOpponentWin(arr2, arr1) || player2.checkForOpponentWin(arr1, arr2) || player2.blockFork() ||
                      player2.fillCenter() || player2.oppositeCorner() || player2.fillCorner(cornerSpots) ||
                      player2.fillCorner(nonCorners)
 }
