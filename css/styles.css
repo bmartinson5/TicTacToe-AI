@@ -88,3 +88,7 @@ p {
 .grid-item:hover {
   background-color: #40A1CE;
 }
+
+.color-win {
+  color: #40A1CE;
+}

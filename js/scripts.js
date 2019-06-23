@@ -140,10 +140,19 @@ function checkWin(player){
   var result = false
   possibleWins.forEach(function(possibleWin){
     if(player.spotsFilled.includes(possibleWin[0]) && player.spotsFilled.includes(possibleWin[1])
-      && player.spotsFilled.includes(possibleWin[2]))
-      result = true
+      && player.spotsFilled.includes(possibleWin[2])){
+        result = true
+        colorWin(possibleWin);
+      }
   })
   return result
+}
+
+function colorWin(winningSpots){
+  winningSpots.forEach(function(spot){
+    console.log(spot);
+    $("#g-"+spot).addClass("color-win");
+  })
 }
 
 
@@ -221,6 +230,7 @@ $(document).ready(function(){
     $("#winDisplay").hide();
     player1.spotsFilled = [];
     player2.spotsFilled = [];
+    $("p").removeClass("color-win")
     //switchTurn();
     emptyBoard();
   })
