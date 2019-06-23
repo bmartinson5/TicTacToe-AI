@@ -1,7 +1,23 @@
+var player1 = new Player("X");
+var player2 = new Computer("O");
+var turn = player1;
+var gameOver;
+var notTurn = player2;
+var spotsNext = [ [[5,7], 3] , [[1,2],3], [[4,5],6], [[7,8],9], [[3,6],9], [[1,4],7], [[2,5],8],
+                [[3, 5], 7], [[2,3],1],[[5,6],4],[[8,9],7],[[6,9],3],[[4,7],1],[[5,8],2],[[1,7],4],
+                [[1,3],2],[[1,9],5],[[3,9],6],[[3,7],5],[[4,6],5],[[7,9],8],[[2,8],5], [[1,5],9]];
+var nonCorners = [2,4,6,8];
+var cornerSpots = [1,3,7,9];
+var oppositeCorner = [9,7,3,1];
+var possibleWins = [[1,2,3],[1,4,7],[1,5,9],[2,5,8],[3,6,9],[3,5,7],[4,5,6],[7,8,9]]
+
+
+
 function Player(symbol){
   this.symbol = symbol
   this.spotsFilled = [];
 }
+
 function  Computer(symbol){
   this.symbol = symbol
   this.spotsFilled = [];
@@ -14,7 +30,8 @@ Player.prototype.fillSpot = function(squareId){
 Computer.prototype.fillSpot = function(squareId){
    this.spotsFilled.push(squareId)
 }
-Computer.prototype.checkForWin = function(arr1, arr2){
+
+Computer.prototype.checkForOpponentWin = function(arr1, arr2){
   var spotsFilled = this.spotsFilled
   var result = null;
   spotsNext.forEach(function(spot){
@@ -29,6 +46,7 @@ Computer.prototype.checkForWin = function(arr1, arr2){
   })
   return result;
 }
+
 Computer.prototype.fillCorner = function(corners){
   var result = 0;
   corners.forEach(function(spot){
@@ -59,7 +77,7 @@ Computer.prototype.oppositeCorner = function(){
   return result
 }
 
-Computer
+
 function emptyBoard(){
   for(let i = 1; i <= 9; ++i){
     $("#g-" + i).text("")
@@ -76,40 +94,21 @@ function printBoard(){
   })
 }
 
-var player1 = new Player("X");
-var player2 = new Computer("O");
-var turn = player1;
-var notTurn = player2;
-var spotsNext = [ [[5,7], 3] , [[1,2],3], [[4,5],6], [[7,8],9], [[3,6],9], [[1,4],7], [[2,5],8], [[3, 5], 7], [[2,3],1],[[5,6],4],[[8,9],7],[[6,9],3],[[4,7],1],[[5,8],2],[[1,7],4],[[1,3],2],[[1,9],5],[[3,9],6],[[3,7],5],[[4,6],5],[[7,9],8],[[2,8],5], [[1,5],9]];
-var nonCorners = [2,4,6,8];
-var cornerSpots = [1,3,7,9];
-var oppositeCorner = [9,7,3,1];
 
 function switchTurn(){
   var temp = turn;
   turn = notTurn;
   notTurn = temp;
 }
+
 function checkWin(player){
-  if(player.spotsFilled.includes(1) && player.spotsFilled.includes(2) && player.spotsFilled.includes(3)){
-    return true
-  } else if (player.spotsFilled.includes(1) && player.spotsFilled.includes(4) && player.spotsFilled.includes(7)) {
-    return true
-  } else if (player.spotsFilled.includes(1) && player.spotsFilled.includes(5) && player.spotsFilled.includes(9)) {
-    return true
-  } else if (player.spotsFilled.includes(2) && player.spotsFilled.includes(5) && player.spotsFilled.includes(8)) {
-    return true
-  } else if (player.spotsFilled.includes(3) && player.spotsFilled.includes(6) && player.spotsFilled.includes(9)) {
-    return true
-  } else if (player.spotsFilled.includes(3) && player.spotsFilled.includes(5) && player.spotsFilled.includes(7)) {
-    return true
-  } else if (player.spotsFilled.includes(4) && player.spotsFilled.includes(5) && player.spotsFilled.includes(6)) {
-    return true
-  } else if (player.spotsFilled.includes(7) && player.spotsFilled.includes(8) && player.spotsFilled.includes(9)) {
-    return true
-  } else{
-    return false
-  }
+  var result = false
+  possibleWins.forEach(function(possibleWin){
+    if(player.spotsFilled.includes(possibleWin[0]) && player.spotsFilled.includes(possibleWin[1])
+      && player.spotsFilled.includes(possibleWin[2]))
+      result = true
+  })
+  return result
 }
 
 
@@ -131,86 +130,63 @@ function checkSpot(id){
 
 //computer move
 function autoFill(){
-  var squareChoice;
   var arr1 = player1.spotsFilled
   var arr2 = player2.spotsFilled
-  //return player2.checkForWin(arr2, arr1) || player2.checkForWin(arr1, arr2)
 
-  squareChoice = player2.checkForWin(arr2, arr1)
-  if(squareChoice) return squareChoice
-  squareChoice = player2.checkForWin(arr1, arr2)
-  if(squareChoice) return squareChoice
-  squareChoice = player2.fillCenter()
-  if(squareChoice) return squareChoice
-  console.log("not");
-  squareChoice = player2.oppositeCorner()
-  if(squareChoice) return squareChoice
-  squareChoice = player2.fillCorner(cornerSpots)
-  if(squareChoice) return squareChoice
-  squareChoice = player2.fillCorner(nonCorners)
-  if(squareChoice) return squareChoice
-    // if(!squareChoice){
-    // squareChoice = player2.checkForWin(player1.spotsFilled, player2.spotsFilled)
-    if(!squareChoice){
-      var count = 0
-      do{
-        console.log("1");
-        squareChoice = (Math.floor(Math.random() * Math.floor(9)))+1
-      } while(checkSpot(squareChoice));
-    }
-  return squareChoice
+  return player2.checkForOpponentWin(arr2, arr1) || player2.checkForOpponentWin(arr1, arr2) ||
+                     player2.fillCenter() || player2.oppositeCorner() || player2.fillCorner(cornerSpots) ||
+                     player2.fillCorner(nonCorners)
 }
 
-function check(){
+function check(turn){
 
   if(checkWin(turn)){
     $("#winDisplay").show()
     $("#winPlayer").text(turn.symbol+"'s have ")
-    return true
+    gameOver = true;
+    return true;
   }
   if(player1.spotsFilled.length === 5 || player2.spotsFilled.length === 5){
     $("#winDisplay").show()
-    $("#winPlayer").text("Nobody has ")
-
-    return true
+$("#winPlayer").text("Nobody has ")
+    gameOver = true;
+    return true;
   }
     console.log("here");
     switchTurn();
-  return false
+  return false;
 
 }
 
 $(document).ready(function(){
   printBoard();
-  var gameOver = false
+  gameOver = false
 
   $(".grid-item").click(function(){
+    if(gameOver) return
     var clickedSquare = parseInt($(this)[0].id);
 
     if(!checkSpot(clickedSquare)){
       player1.fillSpot(clickedSquare)
       printBoard();
-      if(check()) return
+      if(check(player1))
+        return
 
-      var squareChoice;
-      // if (player1.spotsFilled.length === 1 && player1.spotsFilled[0] === 5){
-      //   console.log(player1.spotsFilled.length)
-      //
-      // } else {
-        squareChoice = autoFill();
-
+      var squareChoice = autoFill();
       player2.fillSpot(squareChoice);
       printBoard();
 
-      if(check()) return
+      if(check(player2))
+        return
     }
   })
 
   $(".refresh").click(function(event) {
+    gameOver = false;
     $("#winDisplay").hide();
     player1.spotsFilled = [];
     player2.spotsFilled = [];
-    switchTurn()
+    //switchTurn();
     emptyBoard();
   })
 })
