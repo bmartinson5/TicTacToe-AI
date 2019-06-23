@@ -92,3 +92,13 @@ p {
 .color-win {
   color: #40A1CE;
 }
+
+p {
+  display: none;
+}
+
+.diff-select {
+  position: absolute;
+  margin-left: 75%;
+  margin-top: 25%;
+}

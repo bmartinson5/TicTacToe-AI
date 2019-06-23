@@ -116,6 +116,7 @@ Computer.prototype.blockEdgeFork = function(){
 function emptyBoard(){
   for(let i = 1; i <= 9; ++i){
     $("#g-" + i).text("")
+    $("#g-" + i).hide("")
   }
 }
 
@@ -173,7 +174,7 @@ function checkSpot(id){
 }
 
 //computer move
-function autoFill(){
+Computer.prototype.autoFill = function(){
   var arr1 = player1.spotsFilled
   var arr2 = player2.spotsFilled
 
@@ -186,13 +187,15 @@ function check(turn){
 
   if(checkWin(turn)){
     $("#winDisplay").show()
+    $("#winPlayerPar").show();
     $("#winPlayer").text(turn.symbol+"'s have ")
     gameOver = true;
     return true;
   }
   if(player1.spotsFilled.length === 5 || player2.spotsFilled.length === 5){
-    $("#winDisplay").show()
-$("#winPlayer").text("Nobody has ")
+    $("#winDisplay").show();
+    $("#winPlayerPar").show();
+    $("#winPlayer").text("Nobody has ")
     gameOver = true;
     return true;
   }
@@ -212,14 +215,17 @@ $(document).ready(function(){
 
     if(!checkSpot(clickedSquare)){
       player1.fillSpot(clickedSquare)
-      printBoard();
+      $("#g-" + clickedSquare).text(player1.symbol)
+      $("#g-" + clickedSquare).show()
+
       if(check(player1))
         return
 
-      var squareChoice = autoFill();
+      //computer starts turn
+      var squareChoice = player2.autoFill();
       player2.fillSpot(squareChoice);
-      printBoard();
-
+      $("#g-" + squareChoice).text(player2.symbol)
+      $("#g-" + squareChoice).fadeIn(600)
       if(check(player2))
         return
     }
