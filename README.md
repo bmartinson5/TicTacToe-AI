@@ -2,6 +2,8 @@
 
 #### By Ben Martinson
 
+## [visit site](https://bmartinson5.github.io/TicTacToe-AI)
+
 ## Description
 
 This is a single page web application that plays Tic-Tac-Toe against you. The computer player is unbeatable (either draws of wins) because it employs optimal strategy to play a perfect game no matter what spots the user chooses. 
