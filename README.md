@@ -2,7 +2,7 @@
 
 #### By Ben Martinson
 
-## [visit site](https://bmartinson5.github.io/TicTacToe-AI)
+## [Go to Site - https://bmartinson5.github.io/TicTacToe-AI](https://bmartinson5.github.io/TicTacToe-AI)
 
 ## Description
 
